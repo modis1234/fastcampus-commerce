@@ -29,7 +29,7 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
-      "prettier",
+      "prettier --write",
       "git add"
     ]
   }
