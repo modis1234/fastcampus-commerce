@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@next/font": "13.0.7",
+    "@notionhq/client": "^2.2.2",
     "@types/node": "18.11.17",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.9",
@@ -27,8 +28,8 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint –fix",
-      "prettier –write",
+      "eslint",
+      "prettier",
       "git add"
     ]
   }
