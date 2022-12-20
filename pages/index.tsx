@@ -1,12 +1,22 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 // import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
 
 // const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const [products, setProducts] = useState<
+    { id: string; properties: { id: string }[] }[]
+  >([])
+
+  useEffect(() => {
+    fetch('/api/get-items')
+      .then((res) => res.json())
+      .then((data) => setProducts(data.items))
+  }, [])
+
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleClick = () => {
@@ -30,57 +40,30 @@ export default function Home() {
       <main className={styles.main}>
         <input ref={inputRef} type="text" placeholder="name"></input>
         <button onClick={handleClick}>Add Jacket</button>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
-          </div>
-        </div>
 
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
-          </div>
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          ></a>
+        <div>
+          <p>Product List</p>
+          {products &&
+            products.map((item) => (
+              <div key={item.id}>
+                {JSON.stringify(item)}
+                {item.properties &&
+                  Object.entries(item.properties).map(([key, value]) => (
+                    <button
+                      key={key}
+                      onClick={() => {
+                        fetch(
+                          `/api/get-detail?pageId=${item.id}&propertyId=${value.id}`
+                        )
+                          .then((res) => res.json())
+                          .then((data) => alert(JSON.stringify(data.detail)))
+                      }}
+                    >
+                      {key}
+                    </button>
+                  ))}
+              </div>
+            ))}
         </div>
       </main>
     </>
