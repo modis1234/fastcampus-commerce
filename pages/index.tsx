@@ -7,12 +7,13 @@ import styles from '../styles/Home.module.css'
 // const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const [products, setProducts] = useState<
-    { id: string; properties: { id: string }[] }[]
-  >([])
+  const [products, setProducts] = useState<{ id: string; name: string }[]>([])
 
   useEffect(() => {
-    fetch('/api/get-items')
+    // fetch('/api/get-items')
+    //   .then((res) => res.json())
+    //   .then((data) => setProducts(data.items))
+    fetch('/api/get-products')
       .then((res) => res.json())
       .then((data) => setProducts(data.items))
   }, [])
@@ -44,6 +45,10 @@ export default function Home() {
         <div>
           <p>Product List</p>
           {products &&
+            products.map((item) => <div key={item.id}>{item.name}</div>)}
+
+          {/* NotionApi 활용 - get-items/get-detail */}
+          {/* {products &&
             products.map((item) => (
               <div key={item.id}>
                 {JSON.stringify(item)}
@@ -63,7 +68,7 @@ export default function Home() {
                     </button>
                   ))}
               </div>
-            ))}
+            ))} */}
         </div>
       </main>
     </>
