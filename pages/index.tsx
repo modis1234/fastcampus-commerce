@@ -7,7 +7,9 @@ import styles from '../styles/Home.module.css'
 // const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const [products, setProducts] = useState<{ id: string; name: string }[]>([])
+  const [products, setProducts] = useState<
+    { id: string; name: string; createdAt: string }[]
+  >([])
 
   useEffect(() => {
     // fetch('/api/get-items')
@@ -45,7 +47,12 @@ export default function Home() {
         <div>
           <p>Product List</p>
           {products &&
-            products.map((item) => <div key={item.id}>{item.name}</div>)}
+            products.map((item) => (
+              <div key={item.id}>
+                {item.name}
+                <span>{item.createdAt}</span>
+              </div>
+            ))}
 
           {/* NotionApi 활용 - get-items/get-detail */}
           {/* {products &&
