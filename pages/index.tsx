@@ -1,3 +1,5 @@
+import { css } from '@emotion/react'
+import Button from 'components/Button'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
@@ -41,8 +43,24 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <input ref={inputRef} type="text" placeholder="name"></input>
-        <button onClick={handleClick}>Add Jacket</button>
+        <input
+          className='class="placeholder:italic placeholder:text-pink-400 block bg-white w-50 border border-slate-300 rounded-md py-2 pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 w-96 focus:ring-sky-500 focus:ring-1 sm:text-sm'
+          ref={inputRef}
+          type="text"
+          placeholder="name"
+        ></input>
+        <button
+          css={css`
+            background-color: hotpink;
+            padding: 16px;
+            border-radius: 8px;
+          `}
+          onClick={handleClick}
+        >
+          Add Jacket
+        </button>
+
+        <Button onClick={handleClick}>Add Jacket2</Button>
 
         <div>
           <p>Product List</p>

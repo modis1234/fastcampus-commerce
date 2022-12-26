@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@next/font": "13.0.7",
     "@notionhq/client": "^2.2.2",
     "@prisma/client": "^4.8.0",
@@ -17,16 +19,20 @@
     "@types/react-dom": "18.0.9",
     "eslint": "8.30.0",
     "eslint-config-next": "13.0.7",
+    "init": "^0.1.2",
     "next": "12.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "4.9.4"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.13",
     "husky": "^8.0.2",
     "lint-staged": "^13.1.0",
+    "postcss": "^8.4.20",
     "prettier": "^2.8.1",
-    "prisma": "^4.8.0"
+    "prisma": "^4.8.0",
+    "tailwindcss": "^3.2.4"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
