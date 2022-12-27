@@ -395,6 +395,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-image-gallery@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@types/react-image-gallery/-/react-image-gallery-1.2.0.tgz#b76ff74b312b8343f290ed105f134ee2d31a2ece"
+  integrity sha512-y5OEficUWcnGEc6KvflRXgvhtaMSsDH6JGT3/SJs0FV/RgtKuIgrUpGbDw5MdzyUwe/D8sJTo+aw8NOkaX0nIA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@18.0.26":
   version "18.0.26"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.26.tgz#8ad59fc01fef8eaf5c74f4ea392621749f0b7917"
@@ -2057,6 +2064,11 @@ npm-run-path@^5.1.0:
   dependencies:
     path-key "^4.0.0"
 
+nuka-carousel@^5.4.1:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/nuka-carousel/-/nuka-carousel-5.4.1.tgz#a25044131e34d5b3db881c7c98a55b5e4cc49d60"
+  integrity sha512-pdF8FrlUxmHrv5luEK5lGTnpxTzIX34hVKJ/S/Ywi1YOtCDhjL1dFJnuBmJ6yHn29jU/xwnsWszKVluZbstaaQ==
+
 object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
@@ -2362,6 +2374,11 @@ react-dom@18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-image-gallery@^1.2.11:
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/react-image-gallery/-/react-image-gallery-1.2.11.tgz#707331e71b02964f00c1f3ab98e9efe071ff9f15"
+  integrity sha512-YLMCdNSCf3YPhRmnjEOdEZGEXghTMx4o3dlAqd0rz0nAyebUvTz/xJnIHPActbPSHCvVJgt5A09EPHYbGqw++w==
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
