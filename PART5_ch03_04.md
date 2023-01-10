@@ -273,6 +273,7 @@ try {
   const response = await prisma.products.findMany({
     skip: skip,
     take: take,
+    ...where,
     orderBy: {
       price: 'asc',
     },

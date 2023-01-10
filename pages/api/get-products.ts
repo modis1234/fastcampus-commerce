@@ -12,11 +12,11 @@ async function getProducts(skip: number, take: number, category: number) {
           },
         }
       : undefined
-  console.log(where)
   try {
     const response = await prisma.products.findMany({
       skip: skip,
       take: take,
+      ...where,
       orderBy: {
         price: 'asc',
       },

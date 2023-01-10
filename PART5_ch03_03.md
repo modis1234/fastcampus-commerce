@@ -244,7 +244,6 @@ export default async function handler(
 
 ```
 
-<<<<<<< HEAD
 ### 3. Pagenation 활용 데이터 가져오기
 
 1.  mantine 라이브러리 설치
@@ -324,71 +323,45 @@ export default function Products() {
 3.  get-products-count.ts API 파일 생성
 
 ```javascript
-import { products } from '@prisma/client'
-import Image from 'next/image'
-import { useState, useEffect, useCallback } from 'react'
-import { Pagination } from '@mantine/core'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { PrismaClient } from '@prisma/client'
 
-const TAKE = 9
-export default function Products() {
-  const [activePage, setPage] = useState(1)
-  const [total, setTotal] = useState(0)
-  const [products, setProducts] = useState<products[]>([])
+const prisma = new PrismaClient()
 
-  useEffect(() => {
-    fetch(`/api/get-products-count`)
-      .then((res) => res.json())
-      .then((data) => setTotal(Math.ceil(data.items / 9)))
-    fetch(`/api/get-products?skip=0&take=${TAKE}`)
-      .then((res) => res.json())
-      .then((data) => setProducts(data.items))
-  }, [])
+async function getProductsCount(category: number) {
+  const where =
+    category && category !== -1
+      ? {
+          where: {
+            category_id: category,
+          },
+        }
+      : undefined
+  try {
+    const response = await prisma.products.count(where)
+    console.log(response)
+    return response
+  } catch (error) {
+    console.error(JSON.stringify(error))
+  }
+}
 
-  useEffect(() => {
-    const skip = TAKE * (activePage - 1)
-    fetch(`/api/get-products?skip=${skip}&take=${TAKE}`)
-      .then((res) => res.json())
-      .then((data) => setProducts(data.items))
-  }, [activePage])
+type Data = {
+  items?: any
+  message: string
+}
 
-  return (
-    <div className="px-36 mt-36 mb-36">
-      {products && (
-        <div className="grid grid-cols-3 gap-5">
-          {products.map((item) => (
-            <div key={item.id}>
-              <Image
-                className="rounded"
-                alt={item.name ?? ''}
-                src={item.image_url ?? ''}
-                width={300}
-                height={200}
-                placeholder="blur"
-                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
-              />
-              <div className="flex">
-                <span className="ml-auto">{item.name}</span>
-                <span className="ml-auto">
-                  {item.price.toLocaleString('ko-KR')}원
-                </span>
-              </div>
-              <span className="text-zinc-400">
-                {item.category_id === 1 && '의류'}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
-      <div className="w-full flex mt-5">
-        <Pagination
-          className="m-auto"
-          page={activePage}
-          onChange={setPage}
-          total={total}
-        />
-      </div>
-    </div>
-  )
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
+  const { category } = req.query
+  try {
+    const products = await getProductsCount(Number(category))
+    res.status(200).json({ items: products, message: `Success` })
+  } catch (error) {
+    res.status(400).json({ message: `Failed` })
+  }
 }
 
 ```
@@ -414,17 +387,11 @@ export default function Products() {
 
 ## 결과
 
-=======
-## 결과
-
 - 접속 주소: http://localhost:3000/products/2/edit
 
->>>>>>> c57318fa0e25ec613f07e2e4ac93324af748294e
 ## 이슈 및 에러 경험
 
 ## 참고
-
-<<<<<<< HEAD
 [prisma pagenation] https://www.prisma.io/docs/concepts/components/prisma-client/pagination
 
 [blurDataUrl 생성] https://png-pixel.com/
@@ -433,8 +400,3 @@ export default function Products() {
 
 [참고]
 ![참고](./public/snapshot/5-3-3.%EC%B0%B8%EA%B3%A0.PNG)
-=======
-```
-
-```
->>>>>>> c57318fa0e25ec613f07e2e4ac93324af748294e
