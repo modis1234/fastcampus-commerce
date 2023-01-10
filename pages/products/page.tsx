@@ -12,10 +12,13 @@ export default function Products() {
   useEffect(() => {
     fetch(`/api/get-products-count?skip=0&take=${TAKE}`)
       .then((res) => res.json())
-      .then((data) => setProducts(data.items))
+      .then((data) => setTotal(data.items))
     fetch(`/api/get-products?skip=0&take=${TAKE}`)
       .then((res) => res.json())
-      .then((data) => setProducts(data.items))
+      .then((data) => {
+        console.log(data.items)
+        setProducts(data.items)
+      })
   }, [])
 
   useEffect(() => {
@@ -27,7 +30,7 @@ export default function Products() {
 
   return (
     <div className="px-36 mt-36 mb-36">
-      {products && (
+      {products.length > 0 && (
         <div className="grid grid-cols-3 gap-5">
           {products.map((item) => (
             <div key={item.id}>
