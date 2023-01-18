@@ -152,12 +152,14 @@ export default function Products() {
         </div>
       )}
       <div className="w-full flex mt-5">
-        <Pagination
-          className="m-auto"
-          page={activePage}
-          onChange={setPage}
-          total={total}
-        />
+        {total && (
+          <Pagination
+            className="m-auto"
+            page={activePage}
+            onChange={setPage}
+            total={total}
+          />
+        )}
       </div>
     </div>
   )
