@@ -16,9 +16,7 @@ const getRandomData = (
     name: `${name} ${index + 1}`,
     contents: `{\"blocks\":[{\"key\":\"au0ft\",\"text\":\"${text}-${
       index + 1
-    }!!\",\"type\":\"unstyled\",\"depth\":0,
-          \"inlineStyleRanges\":[{\"offset\":0,\"length\":16,\"style\":\"BOLD\"}],
-          \"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}`,
+    }!!\"`,
     category_id: categotyId,
     image_url: `https://raw.githubusercontent.com/xiaolin/react-image-gallery/master/static/${
       index + (1 % 10) === 0 ? 10 : (index + 1) % 10
@@ -51,6 +49,23 @@ const productData: Prisma.productsCreateInput[] = [
 ]
 
 async function main() {
+  const CATEGORIES = ['SNEAKERS', 'T-SHIRT', 'PANTS', 'CAP', 'HOODIE']
+
+  CATEGORIES.forEach(async (c, i) => {
+    const product = await prisma.categories.upsert({
+      where: {
+        id: i + 1,
+      },
+      update: {
+        name: c,
+      },
+      create: {
+        name: c,
+      },
+    })
+    console.log(`Upsert category id: ${product.id}`)
+  })
+
   await prisma.products.deleteMany({})
 
   for (const p of productData) {
