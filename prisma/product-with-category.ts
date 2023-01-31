@@ -14,9 +14,9 @@ const getRandomData = (
 ) => {
   return Array.apply(null, Array(length)).map((_, index) => ({
     name: `${name} ${index + 1}`,
-    contents: `{\"blocks\":[{\"key\":\"au0ft\",\"text\":\"${text}-${
+    contents: `{\"blocks\":[{\"key\":\"au0ft\",\"text\":\"This is a blue-${
       index + 1
-    }!!\"`,
+    }!!\",\"data\":{}}],\"entityMap\":{}}`,
     category_id: categotyId,
     image_url: `https://raw.githubusercontent.com/xiaolin/react-image-gallery/master/static/${
       index + (1 % 10) === 0 ? 10 : (index + 1) % 10

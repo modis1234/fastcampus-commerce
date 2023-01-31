@@ -1,8 +1,8 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-import { GoogleOAuthProvider } from '@react-oauth/google'
-import { CLIENT_ID } from 'constants/googleAuth'
+// import { GoogleOAuthProvider } from '@react-oauth/google'
+// import { CLIENT_ID } from 'constants/googleAuth'
 import { SessionProvider } from 'next-auth/react'
 
 export default function App({
