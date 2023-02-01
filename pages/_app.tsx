@@ -4,6 +4,7 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 // import { GoogleOAuthProvider } from '@react-oauth/google'
 // import { CLIENT_ID } from 'constants/googleAuth'
 import { SessionProvider } from 'next-auth/react'
+import Header from 'components/Header'
 
 export default function App({
   Component,
@@ -18,7 +19,10 @@ export default function App({
     // <GoogleOAuthProvider clientId={CLIENT_ID}>
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
+        <div className="px-36">
+          <Header />
+          <Component {...pageProps} />
+        </div>
       </QueryClientProvider>
     </SessionProvider>
     // </GoogleOAuthProvider>

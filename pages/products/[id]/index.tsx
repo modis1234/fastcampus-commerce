@@ -2,8 +2,9 @@
 
 import { Button } from '@mantine/core'
 import { products } from '@prisma/client'
-import { IconHeart, IconHeartbeat } from '@tabler/icons'
+import { IconHeart, IconHeartbeat, IconShoppingCart } from '@tabler/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { CountControl } from 'components/CountControl'
 import CustomEditor from 'components/Editor'
 import { CATEGORY_MAP } from 'constants/products'
 import { format } from 'date-fns'
@@ -38,6 +39,7 @@ export default function Products(props: {
 }) {
   const [index, setIndex] = useState(0)
   const { data: session } = useSession()
+  const [quantity, setQuantity] = useState<number | undefined>(1)
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -50,24 +52,6 @@ export default function Products(props: {
         )
       : EditorState.createEmpty()
   )
-
-  // useEffect(() => {
-  //   if (productId != null) {
-  //     fetch(`/api/get-product?id=${productId}`)
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         if (data.items.contents) {
-  //           setEditorState(
-  //             EditorState.createWithContent(
-  //               convertFromRaw(JSON.parse(data.items.contents))
-  //             )
-  //           )
-  //         } else {
-  //           setEditorState(EditorState.createEmpty())
-  //         }
-  //       })
-  //   }
-  // }, [productId])
 
   const { data: wishlist } = useQuery([WISHLIST_QUERY_KEY], () =>
     fetch(WISHLIST_QUERY_KEY)
@@ -112,6 +96,17 @@ export default function Products(props: {
     }
   )
 
+  const validate = (type: 'cart' | 'order') => {
+    if (quantity == null) {
+      alert('최소 수량을 선택하세요.')
+      return
+    }
+
+    // TODO: 장바구리에 등록하는 기능 추가
+
+    router.push('/cart')
+  }
+
   const product = props.product
 
   const isWished =
@@ -122,14 +117,14 @@ export default function Products(props: {
   return (
     <>
       {product != null && productId != null ? (
-        <div className="p-24 flex flex-row">
+        <div className="flex flex-row">
           <div style={{ maxWidth: 600, marginRight: 52 }}>
             <Carousel
-              animation="zoom"
-              autoplay
+              // animation="zoom"
+              // autoplay
               withoutControls
               wrapAround
-              speed={10}
+              // speed={10}
               slideIndex={index}
             >
               {product.images.map((url, idx) => (
@@ -137,8 +132,8 @@ export default function Products(props: {
                   key={`${url}-carocel-${idx}`}
                   src={url}
                   alt="Image"
-                  width={600}
-                  height={600}
+                  width={620}
+                  height={620}
                   layout="responsive"
                 />
               ))}
@@ -146,7 +141,7 @@ export default function Products(props: {
             <div className="flex space-x-4 mt-2">
               {product.images.map((url, idx) => (
                 <div key={`${url}-thumb-${idx}`} onClick={() => setIndex(idx)}>
-                  <Image src={url} alt="image" width={100} height={100} />
+                  <Image src={url} alt="image" width={150} height={195} />
                 </div>
               ))}
             </div>
@@ -162,34 +157,61 @@ export default function Products(props: {
             <div className="text-lg">{`${product.price.toLocaleString(
               'ko-kr'
             )}원`}</div>
-            <Button
-              // loading={isLoading}
-              disabled={wishlist === null}
-              leftIcon={
-                isWished ? (
-                  <IconHeart size={20} stroke={1.5} />
-                ) : (
-                  <IconHeartbeat size={20} stroke={1.5} />
-                )
-              }
-              style={{ backgroundColor: isWished ? 'red' : 'grey' }}
-              radius="xl"
-              size="md"
-              styles={{
-                root: { paddingRight: 14, height: 48 },
-              }}
-              onClick={() => {
-                if (session == null) {
-                  alert('로그인 필요해요')
-                  router.push('/auth/login')
-                  return
+            <div>
+              <span className="text-lg">수량</span>
+              <CountControl value={quantity} setValue={setQuantity} max={200} />
+            </div>
+            <div className="flex space-x-3">
+              <Button
+                // loading={isLoading}
+                disabled={wishlist === null}
+                leftIcon={<IconShoppingCart />}
+                style={{ backgroundColor: 'black' }}
+                radius="xl"
+                size="md"
+                styles={{
+                  root: { paddingRight: 14, height: 48 },
+                }}
+                onClick={() => {
+                  if (session == null) {
+                    alert('로그인 필요해요')
+                    router.push('/auth/login')
+                    return
+                  }
+                  validate('cart')
+                }}
+              >
+                장바구니
+              </Button>
+              <Button
+                // loading={isLoading}
+                disabled={wishlist === null}
+                leftIcon={
+                  isWished ? (
+                    <IconHeart size={20} stroke={1.5} />
+                  ) : (
+                    <IconHeartbeat size={20} stroke={1.5} />
+                  )
                 }
-                console.log('productId->', productId)
-                mutate(String(productId))
-              }}
-            >
-              찜하기
-            </Button>
+                style={{ backgroundColor: isWished ? 'red' : 'grey' }}
+                radius="xl"
+                size="md"
+                styles={{
+                  root: { paddingRight: 14, height: 48 },
+                }}
+                onClick={() => {
+                  if (session == null) {
+                    alert('로그인 필요해요')
+                    router.push('/auth/login')
+                    return
+                  }
+                  console.log('productId->', productId)
+                  mutate(String(productId))
+                }}
+              >
+                찜하기
+              </Button>
+            </div>
             <div className="text-sm text-zinc-300">
               등록:
               {format(new Date(product.createdAt), 'yyyy년 M월 d일')}
