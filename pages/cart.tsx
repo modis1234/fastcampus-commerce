@@ -1,59 +1,42 @@
 import styled from '@emotion/styled'
 import { Button } from '@mantine/core'
-import { products } from '@prisma/client'
+import { Cart, products } from '@prisma/client'
 import { IconRefresh, IconX } from '@tabler/icons'
 import { useQuery } from '@tanstack/react-query'
 import { CountControl } from 'components/CountControl'
 import { CATEGORY_MAP } from 'constants/products'
 import Image from 'next/image'
-import { Router, useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useState } from 'react'
 
-interface CartItem {
+interface CartItem extends Cart {
   name: string
-  productId: number
   price: number
-  quantity: number
-  amount: number
   image_url: string
 }
 
-export default function Cart() {
+export default function CartPage() {
   const router = useRouter()
-  const [data, setData] = useState<CartItem[]>([])
 
-  const dilyveryAmount = 5000
+  const { data } = useQuery<{ items: CartItem[] }, unknown, CartItem[]>(
+    [`/api/get-cart`],
+    () =>
+      fetch(`/api/get-cart`)
+        .then((res) => res.json())
+        .then((data) => data.items)
+  )
+
+  const dilyveryAmount = data && data.length > 0 ? 5000 : 0
   const discountAmount = 0
 
   const amount = useMemo(() => {
+    if (data == null) {
+      return 0
+    }
     return data
       ?.map((item) => item.amount)
       .reduce((prev, curr) => prev + curr, 0)
   }, [data])
-
-  useEffect(() => {
-    const mockData = [
-      {
-        name: '멋들어진 신발',
-        productId: 199,
-        price: 20000,
-        quantity: 2,
-        amount: 40000,
-        image_url:
-          'https://raw.githubusercontent.com/xiaolin/react-image-gallery/master/static/9.jpg',
-      },
-      {
-        name: '느낌있는 후드',
-        productId: 201,
-        price: 102300,
-        quantity: 1,
-        amount: 102300,
-        image_url:
-          'https://raw.githubusercontent.com/xiaolin/react-image-gallery/master/static/9.jpg',
-      },
-    ]
-    setData(mockData)
-  }, [])
 
   const { data: products } = useQuery<
     { items: products[] },
@@ -74,10 +57,10 @@ export default function Cart() {
 
   return (
     <div className="text-2xl mb-3">
-      <span>Cart ({data?.length})</span>
+      <span>Cart ({data ? data?.length : 0})</span>
       <div className="flex">
         <div className="flex flex-col p-4 space-y-4 flex-1">
-          {data?.length > 0 ? (
+          {data && data?.length > 0 ? (
             data?.map((item, index) => <Item key={index} {...item} />)
           ) : (
             <div>장바구니에 아무것도 없습니다.</div>
