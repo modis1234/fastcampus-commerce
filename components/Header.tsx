@@ -27,7 +27,7 @@ export default function Header() {
             onClick={() => router.push('/my')}
           />
         ) : (
-          <IconUser onClick={() => router.push('/login')} />
+          <IconUser onClick={() => router.push('/auth/login')} />
         )}
       </div>
     </div>

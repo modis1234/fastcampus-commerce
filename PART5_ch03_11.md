@@ -579,12 +579,375 @@ export default async function handler(
 
 ```
 
+### 5. 장바구니 업데이트 및 삭제 기능 구현
+
+1. update-cart api 생성
+
+**update-cart**
+
+```javascript
+import type { NextApiRequest, NextApiResponse } from 'next'
+//asdfas
+import { Cart, PrismaClient } from '@prisma/client'
+import { unstable_getServerSession } from 'next-auth'
+import { authOptions } from './auth/[...nextauth]'
+
+const prisma = new PrismaClient()
+
+async function updateCart(item: Cart) {
+  try {
+    const response = await prisma.cart.update({
+      where: {
+        id: item.id,
+      },
+      data: {
+        quantity: item.quantity,
+        amount: item.amount,
+      },
+    })
+
+    console.log(response)
+
+    return response
+  } catch (error) {
+    console.error(JSON.stringify(error))
+  }
+}
+
+type Data = {
+  items?: any
+  message: string
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
+  const { id } = req.query
+  const session = await unstable_getServerSession(req, res, authOptions)
+  const { item } = JSON.parse(req.body)
+
+  if (session == null || session.id !== item.userId) {
+    res
+      .status(200)
+      .json({ items: [], message: `no Session or Invalid Session` })
+    return
+  }
+  try {
+    const wishlist = await updateCart(item)
+    res.status(200).json({ items: wishlist, message: `Success` })
+  } catch (error) {
+    res.status(400).json({ message: `Failed` })
+  }
+}
+
+```
+
+2. delete-cart api 생성
+
+```javascript
+import type { NextApiRequest, NextApiResponse } from 'next'
+//asdfas
+import { Cart, PrismaClient } from '@prisma/client'
+import { unstable_getServerSession } from 'next-auth'
+import { authOptions } from './auth/[...nextauth]'
+
+const prisma = new PrismaClient()
+
+async function deleteCart(id: number) {
+  try {
+    const response = await prisma.cart.delete({
+      where: {
+        id: id,
+      },
+    })
+
+    console.log(response)
+
+    return response
+  } catch (error) {
+    console.error(JSON.stringify(error))
+  }
+}
+
+type Data = {
+  items?: any
+  message: string
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
+  const session = await unstable_getServerSession(req, res, authOptions)
+  const { id } = JSON.parse(req.body)
+
+  if (session == null) {
+    res.status(200).json({ items: [], message: `no Session` })
+    return
+  }
+  try {
+    const wishlist = await deleteCart(id)
+    res.status(200).json({ items: wishlist, message: `Success` })
+  } catch (error) {
+    res.status(400).json({ message: `Failed` })
+  }
+}
+
+```
+
+3. update/delete 버튼 기능 구현
+   **cart.tsx**
+
+```javascript
+import styled from '@emotion/styled'
+import { Button } from '@mantine/core'
+import { Cart, products } from '@prisma/client'
+import { IconRefresh, IconX } from '@tabler/icons'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { CountControl } from 'components/CountControl'
+import { CATEGORY_MAP } from 'constants/products'
+import Image from 'next/image'
+import { useRouter } from 'next/router'
+import React, { useEffect, useMemo, useState } from 'react'
+
+interface CartItem extends Cart {
+  name: string
+  price: number
+  image_url: string
+}
+
+export const CART_QUERY_KEY = '/api/get-cart'
+
+export default function CartPage() {
+  const router = useRouter()
+    ...
+    ...
+    ...
+
+}
+
+const Item = (props: CartItem) => {
+  const router = useRouter()
+
+  const queryClient = useQueryClient()
+  const [quantity, setQuantity] = useState<number | undefined>(props.quantity)
+...
+...
+  const { mutate: updateCart } = useMutation<unknown, unknown, Cart, any>(
+    (item) =>
+      fetch(`/api/update-cart`, {
+        method: 'POST',
+        body: JSON.stringify({ item }),
+      })
+        .then((data) => data.json())
+        .then((res) => res.items),
+    {
+      onMutate: async (item) => {
+        // 조회되기전에 데이터 미리 조작
+        await queryClient.cancelQueries({ queryKey: [CART_QUERY_KEY] })
+
+        // Snapshot the previous value
+        const previous = queryClient.getQueryData([CART_QUERY_KEY])
+
+        // Optimistically update to the new value
+        queryClient.setQueryData<Cart[]>([CART_QUERY_KEY], (old) =>
+          old?.filter((c) => c.id !== item.id).concat(item)
+        )
+
+        // Return a context object with the snapshotted value
+        return { previous }
+      },
+      onError: (error, _, context) => {
+        queryClient.setQueriesData([CART_QUERY_KEY], context.previous)
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries([CART_QUERY_KEY])
+      },
+    }
+  )
+
+  const { mutate: deleteCart } = useMutation<unknown, unknown, number, any>(
+    (id) =>
+      fetch(`/api/delete-cart`, {
+        method: 'POST',
+        body: JSON.stringify({ id }),
+      })
+        .then((data) => data.json())
+        .then((res) => res.items),
+    {
+      onMutate: async (id) => {
+        // 조회되기전에 데이터 미리 조작
+        await queryClient.cancelQueries({ queryKey: [CART_QUERY_KEY] })
+
+        // Snapshot the previous value
+        const previous = queryClient.getQueryData([CART_QUERY_KEY])
+
+        // Optimistically update to the new value
+        queryClient.setQueryData<Cart[]>([CART_QUERY_KEY], (old) =>
+          old?.filter((c) => c.id !== id)
+        )
+
+        // Return a context object with the snapshotted value
+        return { previous }
+      },
+      onError: (error, _, context) => {
+        queryClient.setQueriesData([CART_QUERY_KEY], context.previous)
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries([CART_QUERY_KEY])
+      },
+    }
+  )
+
+  const handleUpdate = () => {
+    //TODO: 장바구니에서 수정 기능 구현
+    if (quantity == null) {
+      alert('최소 수량을 선택하세요.')
+      return
+    }
+    updateCart({ ...props, quantity: quantity, amount: props.price * quantity })
+  }
+
+  const handleDelete = async () => {
+    //TODO: 장바구니에서 삭제 기능 구현
+    await deleteCart(props.id)
+    alert(`장바구니에서 ${props.name} 삭제`)
+  }
+
+  ...
+  ...
+  ...
+
+```
+
 ## 결과
 
 - 접속 주소: http://localhost:3000/cart
   ![](public\snapshot\5-3-10결과.PNG)
 
 ## 이슈 및 에러 경험
+
+> add-cart 가 조금 문제가 있다  
+> add-cart 한게 바로 반영이 안되는 문제가 있음  
+> addCart 하고 router.push 하는 타이밍을 조정해주면 됨
+>
+> 해결
+
+**product/[id]/id**
+
+```javascript
+// import ImageGallery from 'react-image-gallery'
+
+import { Button } from '@mantine/core'
+import { Cart, products } from '@prisma/client'
+import { IconHeart, IconHeartbeat, IconShoppingCart } from '@tabler/icons'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { CountControl } from 'components/CountControl'
+import CustomEditor from 'components/Editor'
+import { CATEGORY_MAP } from 'constants/products'
+import { format } from 'date-fns'
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
+import { GetServerSideProps, GetStaticPropsContext } from 'next'
+import { useSession } from 'next-auth/react'
+import Image from 'next/image'
+import { useRouter } from 'next/router'
+import Carousel from 'nuka-carousel/lib/carousel'
+import { CART_QUERY_KEY } from 'pages/cart'
+import { useState, useEffect } from 'react'
+
+//SSR
+// export async function getServerSideProps(context: GetServerSideProps) {
+export async function getServerSideProps(context: GetStaticPropsContext) {
+  console.log('------->', context.params)
+  const product = await fetch(
+    `http://localhost:3000/api/get-product?id=${context.params?.id}`
+  )
+    .then((res) => res.json())
+    .then((data) => data.items)
+  return {
+    props: {
+      product: { ...product, images: [product.image_url, product.image_url] },
+    },
+  }
+}
+
+const WISHLIST_QUERY_KEY = '/api/get-wishlist'
+
+export default function Products(props: {
+  product: products & { images: string[] }
+}) {
+  const [index, setIndex] = useState(0)
+  const { data: session } = useSession()
+  const [quantity, setQuantity] = useState<number | undefined>(1)
+
+  const router = useRouter()
+  const queryClient = useQueryClient()
+
+  const { id: productId } = router.query
+  ...
+  ...
+
+  ...
+  ...
+
+  const { mutate: addCart } = useMutation<
+    unknown,
+    unknown,
+    Omit<Cart, 'id' | 'userId'>,
+    any
+  >(
+    (item) =>
+      fetch(`/api/add-cart`, {
+        method: 'POST',
+        body: JSON.stringify({ item }),
+      })
+        .then((data) => data.json())
+        .then((res) => res.items),
+    {
+      onMutate: () => {
+        queryClient.invalidateQueries([CART_QUERY_KEY])  // 완료 되기전 처리
+      },
+      onSuccess: () => {
+        router.push('/cart')  // 완료 된 후 처리
+      },
+    }
+  )
+
+  const product = props.product
+
+  const validate = (type: 'cart' | 'order') => {
+    if (quantity == null) {
+      alert('최소 수량을 선택하세요.')
+      return
+    }
+
+    // TODO: 장바구리에 등록하는 기능 추가
+    if (type === 'cart') {
+      addCart({
+        productId: Number(product.id),
+        quantity: quantity,
+        amount: product.price * quantity,
+      })
+    }
+  }
+
+  const isWished =
+    wishlist != null && productId != null
+      ? wishlist.includes(String(productId))
+      : false
+
+  return (
+    <>
+        ...
+        ...
+        ...
+
+    </>
+  )
+}
+
+```
 
 ## 참고
 
