@@ -20,8 +20,8 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     session: async ({ session, user }) => {
-      console.log('session->', session)
-      console.log('user->', user)
+      // console.log('session->', session)
+      // console.log('user->', user)
       session.id = user.id
       return Promise.resolve(session)
     },
