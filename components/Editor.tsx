@@ -25,7 +25,7 @@ export default function CustomEditor({
   onEditorStateChange?: Dispatch<SetStateAction<EditorState | undefined>>
 }) {
   return (
-    <Wrapper>
+    <Wrapper readOnly={readOnly}>
       <Editor
         readOnly={readOnly}
         editorState={editorState}
@@ -46,6 +46,8 @@ export default function CustomEditor({
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ readOnly: boolean }>`
   padding: 16px;
+  ${(props) =>
+    props.readOnly ? '' : 'border: 1px solid black; border-radius: 8px;'}
 `
