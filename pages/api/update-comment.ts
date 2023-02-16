@@ -6,20 +6,37 @@ import { authOptions } from './auth/[...nextauth]'
 
 const prisma = new PrismaClient()
 
-async function getComment(userId: string, orderItemId: number) {
+async function updateComment({
+  userId,
+  orderItemId,
+  rate,
+  contents,
+}: {
+  userId: string
+  orderItemId: number
+  rate: number
+  contents: string
+}) {
   try {
-    const response = await prisma.comment.findUnique({
+    const response = await prisma.comment.upsert({
       where: {
-        orderItemId: orderItemId,
+        orderItemId,
+      },
+      update: {
+        contents,
+        rate,
+      },
+      create: {
+        userId,
+        orderItemId,
+        contents,
+        rate,
       },
     })
+
     console.log(response)
 
-    if (response?.userId === userId) {
-      return response
-    }
-
-    return { message: 'userID is not matched' }
+    return response
   } catch (error) {
     console.error(JSON.stringify(error))
   }
@@ -34,19 +51,22 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { orderItemid } = req.query
+  const { id } = req.query
   const session = await unstable_getServerSession(req, res, authOptions)
+  const { orderItemId, rate, contents } = JSON.parse(req.body)
+
   if (session == null) {
     res.status(200).json({ items: [], message: `no Session` })
     return
   }
 
-  if (orderItemid == null) {
-    res.status(200).json({ items: [], message: `no orderItemid` })
-    return
-  }
   try {
-    const wishlist = await getComment(String(session.id), Number(orderItemid))
+    const wishlist = await updateComment({
+      userId: String(session.id),
+      orderItemId: orderItemId,
+      rate: rate,
+      contents: contents,
+    })
     res.status(200).json({ items: wishlist, message: `Success` })
   } catch (error) {
     res.status(400).json({ message: `Failed` })

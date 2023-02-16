@@ -183,7 +183,7 @@ const Item = (props: OrderItemDetail & { status: number }) => {
   }, [quantity, props.price])
 
   const handleComment = () => {
-    router.push(`/comment/edit?orderItemsId=${props.id}`)
+    router.push(`/comment/edit?orderItemId=${props.id}`)
   }
 
   return (

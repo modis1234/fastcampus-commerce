@@ -117,7 +117,7 @@ model Orders {
 model Comment {
   id Int @id @default(autoincrement())
   userId String
-  oredrItemId Int @unique
+  orderItemId Int @unique
   rate Int
   contents String?
   images String?
