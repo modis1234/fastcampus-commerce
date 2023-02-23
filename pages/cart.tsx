@@ -7,7 +7,7 @@ import { CountControl } from 'components/CountControl'
 import { CATEGORY_MAP } from 'constants/products'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ORDER_QUERY_KEY } from './my'
 
 interface CartItem extends Cart {

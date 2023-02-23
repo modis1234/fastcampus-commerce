@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-//asdfas
+
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()

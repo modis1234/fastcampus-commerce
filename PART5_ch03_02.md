@@ -390,7 +390,7 @@ model products {
 
 ```javascript
 import type { NextApiRequest, NextApiResponse } from 'next'
-//asdfas
+
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -590,7 +590,7 @@ export default function Products() {
 
 ```javascript
 import type { NextApiRequest, NextApiResponse } from 'next'
-//asdfas
+
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()

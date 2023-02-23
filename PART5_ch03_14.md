@@ -238,7 +238,7 @@ export default function CommentEdit() {
 
 ```javascript
 import type { NextApiRequest, NextApiResponse } from 'next'
-//asdfas
+
 import { PrismaClient } from '@prisma/client'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'

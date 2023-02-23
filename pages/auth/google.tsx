@@ -1,7 +1,6 @@
 import { GoogleLogin } from '@react-oauth/google'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { CLIENT_ID } from 'constants/googleAuth'
-import React from 'react'
 
 export default function Google() {
   return (

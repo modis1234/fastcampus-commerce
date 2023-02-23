@@ -42,7 +42,7 @@ model Comment {
 
 ```javascript
 import type { NextApiRequest, NextApiResponse } from 'next'
-//asdfas
+
 import { PrismaClient } from '@prisma/client'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'
@@ -296,7 +296,7 @@ const Wrapper = styled.div<{ readOnly: boolean; noPadding: boolean }>`
 ```javascript
 
 import type { NextApiRequest, NextApiResponse } from 'next'
-//asdfas
+
 import { PrismaClient } from '@prisma/client'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'
@@ -432,7 +432,7 @@ const Wrapper = styled.div`
 
 ```javascript
 import type { NextApiRequest, NextApiResponse } from 'next'
-//asdfas
+
 import { OrderItem, PrismaClient } from '@prisma/client'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'

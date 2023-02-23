@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query'
 import { CATEGORY_MAP } from 'constants/products'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React from 'react'
 
 export default function Wishlist() {
   const router = useRouter()

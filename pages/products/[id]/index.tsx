@@ -9,15 +9,15 @@ import { CountControl } from 'components/CountControl'
 import CustomEditor from 'components/Editor'
 import { CATEGORY_MAP } from 'constants/products'
 import { format } from 'date-fns'
-import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
-import { GetServerSideProps, GetStaticPropsContext } from 'next'
+import { convertFromRaw, EditorState } from 'draft-js'
+import { GetStaticPropsContext } from 'next'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Carousel from 'nuka-carousel/lib/carousel'
 import { CART_QUERY_KEY } from 'pages/cart'
 import { ORDER_QUERY_KEY } from 'pages/my'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 //SSR
 // export async function getServerSideProps(context: GetServerSideProps) {

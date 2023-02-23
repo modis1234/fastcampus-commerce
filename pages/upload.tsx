@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import Button from 'components/Button'
 import Image from 'next/image'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 export default function ImageUpload() {
   const inputRef = useRef<HTMLInputElement>(null)

@@ -98,7 +98,7 @@ export default function Wishlist() {
 
 ```javascript
 import type { NextApiRequest, NextApiResponse } from 'next'
-//asdfas
+
 import { PrismaClient } from '@prisma/client'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'
@@ -273,7 +273,7 @@ export default function Products(props: {
 
 ```javascript
 import type { NextApiRequest, NextApiResponse } from 'next'
-//asdfas
+
 import { Cart, PrismaClient } from '@prisma/client'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'
@@ -535,7 +535,7 @@ const Row = styled.div`
 
 ```javascript
 import type { NextApiRequest, NextApiResponse } from 'next'
-//asdfas
+
 import { PrismaClient } from '@prisma/client'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'
@@ -587,7 +587,7 @@ export default async function handler(
 
 ```javascript
 import type { NextApiRequest, NextApiResponse } from 'next'
-//asdfas
+
 import { Cart, PrismaClient } from '@prisma/client'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'
@@ -647,7 +647,7 @@ export default async function handler(
 
 ```javascript
 import type { NextApiRequest, NextApiResponse } from 'next'
-//asdfas
+
 import { Cart, PrismaClient } from '@prisma/client'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'
